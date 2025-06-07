@@ -22,8 +22,8 @@ WORKDIR /workspace
 COPY . .
 
 RUN conda create -n ref_gs python=3.7.16 \
-  && conda init bash \
   && conda activate ref_gs \
+  && conda init bash \
   && pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu113 \
   && pip install submodules/diff-surfel-rasterization-real \
   && pip install submodules/diff-surfel-rasterization \
