@@ -21,14 +21,15 @@ ENV PATH=$CONDA_DIR/bin:$PATH
 WORKDIR /workspace
 COPY . .
 
-RUN conda create -n ref_gs python=3.7.16 \
-  && conda activate ref_gs \
-  && conda init bash \
-  && pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu113 \
+RUN conda create -n ref_gs python=3.7.16 && conda init bash
+
+SHELL ["conda", "run", "-n", "ref_gs", "/bin/bash", "-c"]
+
+RUN pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu113 \
   && pip install submodules/diff-surfel-rasterization-real \
   && pip install submodules/diff-surfel-rasterization \
   && pip install submodules/diff-surfel-2dgs \
   && pip install submodules/simple-knn \
   && pip install nvdiffrast
 
-SHELL ["conda", "run", "-n", "gs_reflection", "/bin/bash", "-c"]
+# ENTRYPOINT ["conda", "run", "-n", "ref_gs", "/bin/bash", "-c"]
