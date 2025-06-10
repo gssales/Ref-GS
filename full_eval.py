@@ -64,28 +64,28 @@ if not args.skip_training:
     for scene in ref_real_scenes:
         source = args.ref_real + "/" + scene
         extra = extra_args[scene]
-        os.system("python train-real.py -s " + source + " -m " + args.output_path + "/ref_real/" + scene + common_args + extra_args)
+        os.system("python train-real.py -s " + source + " -m " + args.output_path + "/ref_real/" + scene + common_args + extra)
     ref_real_timing = (time.time() - start_time)/60.0
     
     start_time = time.time()
     for scene in refnerf_scenes:
         source = args.refnerf + "/" + scene
         extra = extra_args[scene]
-        os.system("python train.py -s " + source + " -m " + args.output_path + "/shiny_blender/" + scene + common_args + extra_args)
+        os.system("python train.py -s " + source + " -m " + args.output_path + "/shiny_blender/" + scene + common_args + extra)
     refnerf_timing = (time.time() - start_time)/60.0
     
     start_time = time.time()
     for scene in nerf_synthetic_scenes:
         source = args.nerf_synthetic + "/" + scene
         extra = extra_args[scene]
-        os.system("python train-NeRF.py -s " + source + " -m " + args.output_path + "/nerf_synthetic/" + scene + common_args + extra_args)
+        os.system("python train-NeRF.py -s " + source + " -m " + args.output_path + "/nerf_synthetic/" + scene + common_args + extra)
     nerf_synthetic_timing = (time.time() - start_time)/60.0
     
     start_time = time.time()
     for scene in glossy_synthetic_scenes:
         source = args.glossy_synthetic + "/" + scene
         extra = extra_args[scene]
-        os.system("python train-NeRO.py -s " + source + " -m " + args.output_path + "/GlossySynthetic/" + scene + common_args + extra_args)
+        os.system("python train-NeRO.py -s " + source + " -m " + args.output_path + "/GlossySynthetic/" + scene + common_args + extra)
     glossy_synthetic_timing = (time.time() - start_time)/60.0
 
 with open(os.path.join(args.output_path,"timing.txt"), 'w') as file:
