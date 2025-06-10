@@ -2,10 +2,10 @@ import os
 from argparse import ArgumentParser
 import time
 
-ref_real_scenes = ["sedan", "gardenspheres", "toycar"]
-refnerf_scenes = ["helmet","car","ball","teapot","coffee","toaster"]
-nerf_synthetic_scenes = ["ship","ficus","lego","mic","hotdog","chair","materials","drums"]
-glossy_synthetic_scenes = ["bell","tbell","potion","teapot","luyu","cat"]
+ref_real_scenes = ["ref_real/sedan", "ref_real/gardenspheres", "ref_real/toycar"]
+refnerf_scenes = ["shiny_blender/helmet","shiny_blender/car","shiny_blender/ball","shiny_blender/teapot","shiny_blender/coffee","shiny_blender/toaster"]
+nerf_synthetic_scenes = ["nerf_synthetic/ship","nerf_synthetic/ficus","nerf_synthetic/lego","nerf_synthetic/mic","nerf_synthetic/hotdog","nerf_synthetic/chair","nerf_synthetic/materials","nerf_synthetic/drums"]
+glossy_synthetic_scenes = ["GlossySynthetic/bell","GlossySynthetic/tbell","GlossySynthetic/potion","GlossySynthetic/teapot","GlossySynthetic/luyu","GlossySynthetic/cat"]
 
 parser = ArgumentParser(description="Full evaluation script parameters")
 parser.add_argument("--skip_training", action="store_true")
@@ -14,32 +14,32 @@ parser.add_argument("--skip_metrics", action="store_true")
 parser.add_argument("--output_path", default="/mnt/output/ref_gs/eval")
 
 extra_args = {
-    "sedan": " -r 8 --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --env_scope_center -0.032 0.808 0.751 --env_scope_radius 2.138 --init_until_iter 700 --xyz_axis 2.0 1.0 0.0",
-    "gardenspheres": " -r 6 --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --env_scope_center -0.2270 1.9700 1.7740 --env_scope_radius 0.974 --init_until_iter 700 --xyz_axis 2.0 1.0 0.0",
-    "toycar": " -r 6 --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --env_scope_center 0.486 1.108 3.72 --env_scope_radius 2.507 --init_until_iter 1500 --xyz_axis 0.0 2.0 1.0",
+    "ref_real/sedan": " -r 8 --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --env_scope_center -0.032 0.808 0.751 --env_scope_radius 2.138 --init_until_iter 700 --xyz_axis 2.0 1.0 0.0",
+    "ref_real/gardenspheres": " -r 6 --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --env_scope_center -0.2270 1.9700 1.7740 --env_scope_radius 0.974 --init_until_iter 700 --xyz_axis 2.0 1.0 0.0",
+    "ref_real/toycar": " -r 6 --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --env_scope_center 0.486 1.108 3.72 --env_scope_radius 2.507 --init_until_iter 1500 --xyz_axis 0.0 2.0 1.0",
     
-    "helmet": " --run_dim 256 --albedo_bias 0",
-    "car": " --run_dim 256 --albedo_bias 0",
-    "ball": " --run_dim 256 --albedo_bias 0",
-    "teapot": " --run_dim 256 --albedo_bias 0",
-    "coffee": " --run_dim 256 --albedo_bias 0 --albedo_lr 0.002",
-    "toaster": " --run_dim 256 --albedo_bias 0",
+    "shiny_blender/helmet": " --run_dim 256 --albedo_bias 0",
+    "shiny_blender/car": " --run_dim 256 --albedo_bias 0",
+    "shiny_blender/ball": " --run_dim 256 --albedo_bias 0",
+    "shiny_blender/teapot": " --run_dim 256 --albedo_bias 0",
+    "shiny_blender/coffee": " --run_dim 256 --albedo_bias 0 --albedo_lr 0.002",
+    "shiny_blender/toaster": " --run_dim 256 --albedo_bias 0",
 
-    "ship": " --run_dim 64 --albedo_bias 0 --gsrgb_loss --albedo_lr 0.002",
-    "ficus": " --run_dim 64 --albedo_bias 0 --gsrgb_loss --albedo_lr 0.002",
-    "lego": " --run_dim 64 --albedo_bias 0 --gsrgb_loss --albedo_lr 0.002",
-    "mic": " --run_dim 64 --albedo_bias 0 --gsrgb_loss --albedo_lr 0.002",
-    "hotdog": " --run_dim 64 --albedo_bias 0 --gsrgb_loss --albedo_lr 0.002",
-    "chair": " --run_dim 64 --albedo_bias 0 --gsrgb_loss --albedo_lr 0.002",
-    "materials": " --run_dim 256 --albedo_bias 0",
-    "drums": " --run_dim 64 --albedo_bias 0 --albedo_lr 0.002",
+    "nerf_synthetic/ship": " --run_dim 64 --albedo_bias 0 --gsrgb_loss --albedo_lr 0.002",
+    "nerf_synthetic/ficus": " --run_dim 64 --albedo_bias 0 --gsrgb_loss --albedo_lr 0.002",
+    "nerf_synthetic/lego": " --run_dim 64 --albedo_bias 0 --gsrgb_loss --albedo_lr 0.002",
+    "nerf_synthetic/mic": " --run_dim 64 --albedo_bias 0 --gsrgb_loss --albedo_lr 0.002",
+    "nerf_synthetic/hotdog": " --run_dim 64 --albedo_bias 0 --gsrgb_loss --albedo_lr 0.002",
+    "nerf_synthetic/chair": " --run_dim 64 --albedo_bias 0 --gsrgb_loss --albedo_lr 0.002",
+    "nerf_synthetic/materials": " --run_dim 256 --albedo_bias 0",
+    "nerf_synthetic/drums": " --run_dim 64 --albedo_bias 0 --albedo_lr 0.002",
 
-    "bell": " --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --init_until_iter 3000",
-    "tbell": " --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --init_until_iter 3000",
-    "potion": " --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --init_until_iter 3000",
-    "teapot": " --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --init_until_iter 3000",
-    "luyu": " --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --init_until_iter 3000",
-    "cat": " --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --init_until_iter 3000",
+    "GlossySynthetic/bell": " --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --init_until_iter 3000",
+    "GlossySynthetic/tbell": " --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --init_until_iter 3000",
+    "GlossySynthetic/potion": " --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --init_until_iter 3000",
+    "GlossySynthetic/teapot": " --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --init_until_iter 3000",
+    "GlossySynthetic/luyu": " --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --init_until_iter 3000",
+    "GlossySynthetic/cat": " --run_dim 256 --albedo_bias 2 --albedo_lr 0.0005 --init_until_iter 3000",
 }
 
 
@@ -64,28 +64,28 @@ if not args.skip_training:
     for scene in ref_real_scenes:
         source = args.ref_real + "/" + scene
         extra = extra_args[scene]
-        os.system("python train-real.py -s " + source + " -m " + args.output_path + "/ref_real/" + scene + common_args + extra)
+        os.system("python train-real.py -s " + source + " -m " + args.output_path + "/" + scene + common_args + extra)
     ref_real_timing = (time.time() - start_time)/60.0
     
     start_time = time.time()
     for scene in refnerf_scenes:
         source = args.refnerf + "/" + scene
         extra = extra_args[scene]
-        os.system("python train.py -s " + source + " -m " + args.output_path + "/shiny_blender/" + scene + common_args + extra)
+        os.system("python train.py -s " + source + " -m " + args.output_path + "/" + scene + common_args + extra)
     refnerf_timing = (time.time() - start_time)/60.0
     
     start_time = time.time()
     for scene in nerf_synthetic_scenes:
         source = args.nerf_synthetic + "/" + scene
         extra = extra_args[scene]
-        os.system("python train-NeRF.py -s " + source + " -m " + args.output_path + "/nerf_synthetic/" + scene + common_args + extra)
+        os.system("python train-NeRF.py -s " + source + " -m " + args.output_path + "/" + scene + common_args + extra)
     nerf_synthetic_timing = (time.time() - start_time)/60.0
     
     start_time = time.time()
     for scene in glossy_synthetic_scenes:
         source = args.glossy_synthetic + "/" + scene
         extra = extra_args[scene]
-        os.system("python train-NeRO.py -s " + source + " -m " + args.output_path + "/GlossySynthetic/" + scene + common_args + extra)
+        os.system("python train-NeRO.py -s " + source + " -m " + args.output_path + "/" + scene + common_args + extra)
     glossy_synthetic_timing = (time.time() - start_time)/60.0
 
 with open(os.path.join(args.output_path,"timing.txt"), 'w') as file:
@@ -96,7 +96,7 @@ if not args.skip_rendering:
     for scene in ref_real_scenes:
         all_sources.append(args.ref_real + "/" + scene)
     for scene in refnerf_scenes:
-        all_sources.append(args.refnerf + "/" + scene)
+        all_sources.append(args.refnerf + "/" + scene + " --render_normals")
     for scene in nerf_synthetic_scenes:
         all_sources.append(args.nerf_synthetic + "/" + scene)
     for scene in glossy_synthetic_scenes:
