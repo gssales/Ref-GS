@@ -444,8 +444,8 @@ class GaussianModel:
         self.active_sh_degree = self.max_sh_degree
         self.max_radii2D = torch.zeros((self.get_xyz.shape[0]), device="cuda")
         
-        self.light_mlp =  torch.load(path.split('point_cloud.ply')[0]+'/light_mlp.pt')
-        self.dir_encoding =  torch.load(path.split('point_cloud.ply')[0]+'/dir_encoding.pt')
+        self.light_mlp =  torch.load(path.split('point_cloud.ply')[0]+'/light_mlp.pt', weights_only=False)
+        self.dir_encoding =  torch.load(path.split('point_cloud.ply')[0]+'/dir_encoding.pt', weights_only=False)
         print('Load Path', path)
 
     
