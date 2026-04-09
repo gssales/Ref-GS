@@ -34,7 +34,7 @@ def render_set(model_path, name, iteration, views, gaussians, pipeline, backgrou
 
     for idx, view in enumerate(tqdm(views, desc="Rendering progress")):
         render_pkg = render(view, gaussians, pipeline, background, iteration=iteration) 
-        rendering = render_pkg["render"]
+        rendering = render_pkg["pbr_rgb"]
         gt = view.original_image[0:3, :, :]
         gt = gt[:3,...] * gt[3:,...] + (1-gt[3:,...]) * background[:, None, None]
 
