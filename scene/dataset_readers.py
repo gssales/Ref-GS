@@ -226,7 +226,7 @@ def readCamerasFromTransforms(path, transformsfile, white_background, extension=
             R = np.transpose(w2c[:3,:3])  # R is stored transposed due to 'glm' in CUDA code
             T = w2c[:3, 3]
 
-            image_path = os.path.join(path, cam_name)
+            image_path = os.path.join(path, cam_name).replace("\\", "/")
             image_name = Path(cam_name).stem
             image = Image.open(image_path)
             
@@ -236,7 +236,7 @@ def readCamerasFromTransforms(path, transformsfile, white_background, extension=
                 im_data = np.array(image.convert("RGB"))
                 a_data = np.array(mask.convert("RGB"))[..., 0:1]
                 arr = np.concatenate((im_data, a_data), axis=-1)
-                image = Image.fromarray(np.array(arr, dtype=np.byte), "RGBA")
+                image = Image.fromarray(np.array(arr, dtype=np.uint8), "RGBA")
             
             if fovx == None:
                 if GlossyReal:
